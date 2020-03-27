@@ -1,0 +1,5 @@
+*.o
+libfe.a
+fetest-ddl
+fetest-dml
+testdb/

@@ -23,7 +23,7 @@ static char	header[PAGE_SIZE];
  * Open the file, allocate as many pages in the file as the buffer manager
  * would allow, and write the page number into the data, then close file.
  */
-void writefile(const char *fname)
+void writefile(const char *fname, int fdd)
 {
     PFpage *fpage;
     int i;
@@ -47,10 +47,10 @@ void writefile(const char *fname)
         exit(-1);
     }
     
-    breq.fd = FD1;
+    breq.fd = fdd;
     breq.unixfd = unixfd;
 
-    for (i=0; i < 2 * BF_MAX_BUFS; i++){
+    for (i=0; i < 3 * BF_MAX_BUFS; i++){
         breq.pagenum = i;
 
         /* allocate a page */
@@ -205,7 +205,7 @@ void testbf1(void)
     unlink(FILE1);
 
     /* write to file1 */
-    writefile(FILE1);
+    writefile(FILE1, FD1);
     fflush(stdout);
 
     printf("\n ****** Showing the file has been written *****\n");
@@ -244,8 +244,14 @@ int main()
   /* initialize BF layer */
   BF_Init();
 
+  writefile("file1",1 );
+  writefile("file2",2);
+  writefile("file3", 3);
+  readfile("file1");
+  readfile("file2");
+
   printf("\n************* Starting testbf1 *************\n");
-  testbf1(); 
+  /*testbf1();*/
   printf("\n************* End testbf1 ******************\n");
 }
 

@@ -1,0 +1,8 @@
+am.o
+aminternal.o
+amtest.o
+amtest
+libam.a
+testrel
+testrel.*
+amHash.o

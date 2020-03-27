@@ -1,16 +1,16 @@
 # Makefile for BF layer
 LIB	= bf
 INCDIR	= ${MINIREL_HOME}/h
-INCS	= 
-SRCS	= 
-TESTS	= bftest.c
+INCS	= bfinternal.h
+SRCS	= bf.c bfinternal.c
+TESTS	= bftest.c 
 OBJS	= ${SRCS:.c=.o}
 LIBS	= lib${LIB}.a
 
 #############################################################################
 # This macro definition can be overwritten by command-line definitions.
 CC	= gcc
-CFLAGS	= -g -ansi -pedantic
+CFLAGS	= -g -ansi -pedantic -Wall
 #CFLAGS	= -O -ansi -pedantic
 #############################################################################
 

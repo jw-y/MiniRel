@@ -154,7 +154,7 @@ void insert_student()
 void insert_professor()
 {
   ATTR_VAL values[PROF_NUM_ATTRS];
-  int i, msg;
+  int i;
 
   printf("Start insert_professor ...  \n");
   DBconnect(TESTDB);
@@ -168,10 +168,8 @@ void insert_professor()
     sprintf(values[1].value,"professor%d",i);
     *(int*)(values[2].value) = i + 400;
 
-    if ( (msg = Insert(PROFREL,PROF_NUM_ATTRS,values)) != FEE_OK){
-	      FE_PrintError("Insert professor faild.");
-        exit(1);
-    }
+    if (Insert(PROFREL,PROF_NUM_ATTRS,values) != FEE_OK)
+	FE_PrintError("Insert professor faild.");
   }
 
    DBclose(TESTDB);
@@ -291,7 +289,7 @@ void select_student()
   projAttrs[3] = (char*)"age";
 
   if (Select(STUDREL,"gpa",GT_OP,REAL_TYPE,sizeof(float),(char*)&gpaval,
-		numProjs,projAttrs,NULL) != FEE_OK)
+		numProjs,projAttrs,"selectStu") != FEE_OK)
 	FE_PrintError("Select student.sid faild.");
 
   DBclose(TESTDB);
@@ -310,7 +308,7 @@ void select_professor()
   projAttrs[1] = (char*)"office";
 
   if (Select(PROFREL,"pid",LT_OP,INT_TYPE,sizeof(int),(char*)&pidval,
-		numProjs,projAttrs,NULL) != FEE_OK)
+		numProjs,projAttrs,"selectPro") != FEE_OK)
 	FE_PrintError("Select professor.sid faild.");
 
   DBclose(TESTDB);
@@ -344,7 +342,7 @@ void join_student_prof(char *resRel)
 
   DBconnect(TESTDB);
 
-  if (Join(&relAttrs[0],EQ_OP,&relAttrs[1],
+  if (Join(&relAttrs[0],LE_OP,&relAttrs[1],
 		numProjs,projAttrs,resRel) != FEE_OK)
 	FE_PrintError("Join student.sid and prof.pid faild.");
 
@@ -377,7 +375,15 @@ int main(int argc, char *argv[])
   printf(">>> Selecting / Joining students and professors ...\n");
   select_student();
   select_professor();
+
+  show_table("selectStu");
+  show_table("selectPro");
+
+  exit(1);
+
   join_student_prof(NULL);
+
+  
 
   printf(">>> Deleting students and professors ...\n");
   delete_student();

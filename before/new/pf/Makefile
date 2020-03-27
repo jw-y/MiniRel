@@ -1,27 +1,29 @@
-# Makefile for HF layer
-LIB	= hf
+# Makefile for PF layer
+LIB	= pf
 INCDIR	= ${MINIREL_HOME}/h
-INCS	= hfinternal.h hfHash.h
-SRCS	= hf.c hfinternal.c hfHash.c
-TESTS	= hftest.c
+INCS	= pfinternal.h
+SRCS	= pf.c
+TESTS	= pftest.c
 OBJS	= ${SRCS:.c=.o}
-LIBS	= lib${LIB}.a ../pf/libpf.a ../bf/libbf.a
+LIBS	= lib${LIB}.a ../bf/libbf.a
 
 #############################################################################
 # This macro definition can be overwritten by command-line definitions.
 CC	= gcc
-CFLAGS	= -g -ansi -pedantic -Wall -no-pie
+CFLAGS	= -g -ansi -pedantic -Wall
 #CFLAGS	= -O -ansi -pedantic
 #############################################################################
 
 all: lib${LIB}.a ${LIB}test
 
-${LIB}test: ${LIB}test.o lib${LIB}.a
-	$(CC) $(CFLAGS) -o $@ $< ${LIBS} -lm
+${LIB}test: ${LIB}test.o ${LIBS}
+	$(CC) $(CFLAGS) -o $@ $< ${LIBS}
 
-lib${LIB}.a: $(OBJS)
+lib${LIB}.a:$(OBJS)
 	ar cr lib${LIB}.a $(OBJS)
 	ranlib lib${LIB}.a
+
+$(OBJS): ${INCS}
 
 clean:
 	rm -f lib${LIB}.a *.o ${LIB}test *.bak *~

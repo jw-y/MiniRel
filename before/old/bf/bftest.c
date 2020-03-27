@@ -30,8 +30,6 @@ void writefile(const char *fname)
     int fd,unixfd,pagenum;
     int error;
 
-    char tmp[8] = "\0\0\0\0\0\0\0\0";
-
     printf("\n******** %s opened for write ***********\n",fname);
 
     /* open file1 */
@@ -43,10 +41,10 @@ void writefile(const char *fname)
     /* write an empty page header */
     memset(header, 0x00, PAGE_SIZE);
     if(write(unixfd, header, PAGE_SIZE) != PAGE_SIZE) {
-        fprintf(stderr,"writefile writing header failed: %s\n",fname);
-        exit(-1);
+	fprintf(stderr,"writefile writing header failed: %s\n",fname);
+	exit(-1);
     }
-    
+
     breq.fd = FD1;
     breq.unixfd = unixfd;
 
@@ -55,8 +53,8 @@ void writefile(const char *fname)
 
         /* allocate a page */
         if((error = BF_AllocBuf(breq, &fpage)) != BFE_OK) {
-	    BF_PrintError("alloc buffer failed");
-	    exit(-11);
+            BF_PrintError("alloc buffer failed");
+            exit(-11);
         }
 
         /* memcpy(&fpage, (char *)&i, sizeof(int)); */
@@ -119,21 +117,21 @@ void readfile(const char *fname)
     for (i=0; i < 2 * BF_MAX_BUFS; i++){
         breq.pagenum = i;
 
-        if((error = BF_GetBuf(breq, &fpage)) != BFE_OK) {
-            printf("BF_GetBuf failed (fname=%s, i=%d)",fname,i);
-            BF_PrintError("getBuf failed");
-            exit(-1);
-        }
+	if((error = BF_GetBuf(breq, &fpage)) != BFE_OK) {
+		printf("BF_GetBuf failed (fname=%s, i=%d)",fname,i);
+		BF_PrintError("getBuf failed");
+		exit(-1);
+	}
 
-        sscanf((char*)fpage,"%4d%4d",&fd,&pagenum);
-        printf("values from buffered page %d: %d %d\n",i,fd,pagenum);
-        fflush(stdout);
+	sscanf((char*)fpage,"%4d%4d",&fd,&pagenum);
+	printf("values from buffered page %d: %d %d\n",i,fd,pagenum);
+	fflush(stdout);
 
-        /* unpin this page */
-        if ((error = BF_UnpinBuf(breq))!= BFE_OK){
-            BF_PrintError("unpin buffer failed");
-            exit(-11);
-        }
+	/* unpin this page */
+	if ((error = BF_UnpinBuf(breq))!= BFE_OK){
+	    BF_PrintError("unpin buffer failed");
+	    exit(-11);
+	}
     }
 
     BF_ShowBuf();
@@ -171,18 +169,15 @@ void printfile(const char *fname)
 	exit(-1);
     }
 
-    fd = 0;
-    pagenum=0;
-
     for(i=0; (nbytes=read(unixfd,&fpage,sizeof(PFpage)))>0 ;i++) {
-        if (nbytes != sizeof(PFpage)) {
-            printf("read failed: %s, %d",fname,i);
-            exit(-1);
-        }
+	if (nbytes != sizeof(PFpage)) {
+		printf("read failed: %s, %d",fname,i);
+		exit(-1);
+	}
 
-        sscanf((char*)&fpage,"%4d%4d",&fd,&pagenum);
-        printf("values from disk page %d: %d %d\n",i,fd,pagenum);
-        fflush(stdout);
+	sscanf((char*)&fpage,"%4d%4d",&fd,&pagenum);
+	printf("values from disk page %d: %d %d\n",i,fd,pagenum);
+	fflush(stdout);
     }
 
     printf("\n ********** eof reached **********\n");

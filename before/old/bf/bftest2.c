@@ -30,14 +30,12 @@ void writefile(const char *fname)
     int fd,unixfd,pagenum;
     int error;
 
-    char tmp[8] = "\0\0\0\0\0\0\0\0";
-
     printf("\n******** %s opened for write ***********\n",fname);
 
     /* open file1 */
     if ((unixfd = open(fname, O_RDWR|O_CREAT, FILE_CREATE_MASK))<0){
-	printf("open failed: file1");
-	exit(-1);
+        printf("open failed: file1");
+        exit(-1);
     }
 
     /* write an empty page header */
@@ -46,7 +44,7 @@ void writefile(const char *fname)
         fprintf(stderr,"writefile writing header failed: %s\n",fname);
         exit(-1);
     }
-    
+
     breq.fd = FD1;
     breq.unixfd = unixfd;
 
@@ -55,8 +53,8 @@ void writefile(const char *fname)
 
         /* allocate a page */
         if((error = BF_AllocBuf(breq, &fpage)) != BFE_OK) {
-	    BF_PrintError("alloc buffer failed");
-	    exit(-11);
+            BF_PrintError("alloc buffer failed");
+            exit(-11);
         }
 
         /* memcpy(&fpage, (char *)&i, sizeof(int)); */
@@ -135,7 +133,6 @@ void readfile(const char *fname)
             exit(-11);
         }
     }
-
     BF_ShowBuf();
 
     /* Flush all buffer pages for this file */
@@ -150,8 +147,8 @@ void readfile(const char *fname)
 
     /* close the file */
     if ((error = close(unixfd)) < 0) {
-	printf("close failed : file1");
-	exit(-1);
+        printf("close failed : file1");
+        exit(-1);
     }
 }
 
@@ -167,12 +164,9 @@ void printfile(const char *fname)
     printf("\n ********* printing file **********\n");
 
     if ((unixfd = open(fname, O_RDONLY))<0){
-	printf("open failed: %s",fname);
-	exit(-1);
+        printf("open failed: %s",fname);
+        exit(-1);
     }
-
-    fd = 0;
-    pagenum=0;
 
     for(i=0; (nbytes=read(unixfd,&fpage,sizeof(PFpage)))>0 ;i++) {
         if (nbytes != sizeof(PFpage)) {
@@ -189,8 +183,8 @@ void printfile(const char *fname)
 
     /* close the file */
     if ((error = close(unixfd)) < 0) {
-	printf("close failed : file1");
-	exit(-1);
+        printf("close failed : file1");
+        exit(-1);
     }
 }
 

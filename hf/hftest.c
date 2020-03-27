@@ -384,5 +384,7 @@ int main()
   printf("*** begin of hftest3 *** \n");
   hftest3();
   printf("*** end of hftest3 *** \n");
+
+  return 0;
 }
 

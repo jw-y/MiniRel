@@ -40,9 +40,11 @@ void show_catalogs()
 
    /* PrintTable part */
    printf("Print the relation catalog\n");
-   PrintTable("relcat");
+   if(PrintTable("relcat")<0)
+      FE_PrintError("cannot print");
    printf("Print the attribute catalog\n"); 
-   PrintTable("attrcat");
+   if(PrintTable("attrcat")<0)
+      FE_PrintError("cannot print");
 }
 
 /***********************************/

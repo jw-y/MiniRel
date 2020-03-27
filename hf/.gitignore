@@ -1,0 +1,10 @@
+hf.o
+hfinternal.o
+hftest
+hftest.o
+libhf.a
+recfile
+compfile
+hfHash.o
+hfScanHash.o
+opentabtest*
